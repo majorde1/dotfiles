@@ -1,0 +1,37 @@
+#!/bin/zsh
+
+WEATHER="$(weather -q -m --no-cache-data SJC 2>/dev/null)"
+TEMP="$(echo $WEATHER | awk '/Temperature:/ {print $2 "°C"}')"
+SKY="$(echo $WEATHER | grep 'Sky conditions:' | sed -e 's/.*Sky conditions: //')"
+HOUR="$(date '+%H')"
+
+# See https://www.weather.gov/media/pah/ServiceGuide/A-forecast.pdf
+# clear
+# mostly clear
+# partly cloudy
+# mostly cloudy
+# considerable cloudiness
+# overcast
+
+CLEAR=" "
+PARTLY_CLEAR=" "
+if (( $HOUR < 7 || $HOUR > 19 )); then
+  CLEAR=" "
+  PARTLY_CLEAR=" "
+fi
+
+if [[ "$SKY" == "clear" ]]; then
+  echo "$CLEAR$TEMP"
+elif [[ "$SKY" == "mostly clear" ]]; then
+  echo "$CLEAR$TEMP"
+elif [[ "$SKY" == "partly cloudy" ]]; then
+  echo "$PARTLY_CLEAR$TEMP"
+elif [[ "$SKY" == "mostly cloudy" ]]; then
+  echo "$PARTLY_CLEAR$TEMP"
+elif [[ "$SKY" == "considerable cloudiness" ]]; then
+  echo " $TEMP"
+elif [[ "$SKY" == "overcast" ]]; then
+  echo " $TEMP"
+else
+  echo " $TEMP"
+fi

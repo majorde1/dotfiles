@@ -1,0 +1,13 @@
+alias ls='ls --color'
+alias la='ls -la'
+alias ll='ls -ll'
+alias ga='git add'
+alias gc='git commit'
+alias gp='git push'
+
+alias d='dirs-v'
+for index ({1..9}) alias "$index"="cd + ${index}"; unset index
+
+alias vim='nvim'
+
+alias google-java-format='java -jar ~/bin/jar_files/google-java-format-1.10.0-all-deps.jar'

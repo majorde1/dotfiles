@@ -1,0 +1,107 @@
+# Prompt with HG and G4 status info
+# by Matt Jorde
+
+# Adapted from:
+# Purification
+# by Matthieu Cneude
+# https://github.com/Phantas0s/purification
+
+# prompt:
+# %F => color dict
+# %f => reset color
+# %~ => current path
+# %* => time
+# %n => username
+# %m => shortname host
+# %(?..) => prompt conditional - %(condition.true.false)
+
+prompt_status() {
+  ZSH_PROMPT_PREFIX=" %F{yellow}λ %f%F{blue}"
+  #ZSH_PROMPT_UNSTAGED="%F{red}⬍%f"
+  #ZSH_PROMPT_ADDED="%F{green}🞧%f"
+  #ZSH_PROMPT_MODIFIED="%F{cyan}✱%f"
+  #ZSH_PROMPT_DELETED="%F{red}🞬%f"
+  #ZSH_PROMPT_RENAMED="%F{yellow}🢂%f"
+  #ZSH_PROMPT_UNTRACKED="%B%F{magenta}?%f%b"
+  ZSH_PROMPT_UNSTAGED="%F{red}%f"
+  ZSH_PROMPT_ADDED="%F{green}✚%f"
+  ZSH_PROMPT_MODIFIED="%F{cyan}✱%f"
+  ZSH_PROMPT_DELETED="%B%F{red}🞬%f%b"
+  ZSH_PROMPT_RENAMED="%B%F{yellow}🡆%f%b"
+  ZSH_PROMPT_UNTRACKED="%B%F{magenta}?%f%b"
+
+  cd -q $1
+  if [[ -d "./.git" ]]; then
+    git_prompt_status $1
+  fi
+}
+
+# Display git status
+git_prompt_status() {
+  local INDEX STATUS RESULT
+
+  INDEX=$(command git status --porcelain -b 2> /dev/null)
+  STATUS=""
+
+  if $(echo "$INDEX" | command rg '^\?\? ' &> /dev/null); then
+    STATUS="${ZSH_PROMPT_UNTRACKED}${STATUS}"
+  fi
+
+  if $(echo "$INDEX" | rg '^R  ' &> /dev/null); then
+    STATUS="${ZSH_PROMPT_RENAMED}${STATUS}"
+  fi
+
+  if $(echo "$INDEX" | rg '(^D. )|(^.D )' &> /dev/null); then
+    STATUS="${ZSH_PROMPT_DELETED}${STATUS}"
+  fi
+
+  if $(echo "$INDEX" | rg '(^A. )|(^.A )' &> /dev/null); then
+    STATUS="${ZSH_PROMPT_ADDED}${STATUS}"
+  fi
+
+  if $(echo "$INDEX" | rg '(^M. )|(^.M )|(^ T )' &> /dev/null); then
+    STATUS="${ZSH_PROMPT_MODIFIED}${STATUS}"
+  fi
+
+  if $(echo "$INDEX" | rg '(^.[A-Z] )' &> /dev/null); then
+    STATUS="${ZSH_PROMPT_UNSTAGED}${STATUS}"
+  fi
+
+  RESULT="${ZSH_PROMPT_PREFIX}$(git branch | rg '^\*' | sed -e 's/^\* //')"
+  if [[ ! -z "$STATUS" ]]; then
+    RESULT="${RESULT} [ $STATUS%F{blue} ]%f"
+  fi
+  echo "${RESULT}"
+}
+
+prompt_status_done() {
+  ZSH_PROMPT="$3"
+  zle reset-prompt
+}
+
+prompt_precmd() {
+  async_flush_jobs zsh_prompt_worker
+  async_job zsh_prompt_worker prompt_status $PWD
+}
+
+modified_path() {
+  echo $PWD | sed -e "s:^${HOME}:~:"
+}
+
+prompt_setup() {
+  # Display hg branch
+
+  async_init
+  async_start_worker zsh_prompt_worker
+  async_register_callback zsh_prompt_worker prompt_status_done
+
+  autoload -Uz add-zsh-hook
+  add-zsh-hook precmd prompt_precmd
+
+  setopt prompt_subst
+  RPROMPT='$ZSH_PROMPT'
+  PROMPT=$'%F{green}%n@%m%f $(modified_path) %B%F{blue}$%f%b '
+}
+
+ZSH_PROMPT=''
+prompt_setup
