@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+if (( $(pulsemixer --get-mute) == 1 )); then
+  echo " MUTE"
+  echo
+  echo '#d8aa1e'
+  exit 0
+fi
+  
+VOLUME=$(pulsemixer --get-volume | awk '{print $1}')
+if (( $VOLUME > 70 )); then
+  echo " ${VOLUME}%"
+elif (( $VOLUME > 20 )); then
+  echo " ${VOLUME}%"
+else
+  echo " ${VOLUME}%"
+fi

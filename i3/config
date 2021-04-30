@@ -235,9 +235,9 @@ Media (m) mute, (j) -volume, (k) +volume, (h) prev, (l) next, \
 (p) Play/Pause
 
 mode "$mode_media" {
-  bindsym m exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
-  bindsym j exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
-  bindsym k exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+  bindsym m exec --no-startup-id pulsemixer --toggle-mute
+  bindsym j exec --no-startup-id pulsemixer --change-volume -5
+  bindsym k exec --no-startup-id pulsemixer --change-volume +5
   bindsym h exec --no-startup-id playerctl previous
   bindsym l exec --no-startup-id playerctl next
   bindsym p exec --no-startup-id playerctl play-pause
