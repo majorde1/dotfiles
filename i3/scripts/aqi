@@ -35,22 +35,22 @@ fi
 local AQI RATING
 if (( $PM2_5 < 12.1 )); then
   AQI=$( printf "%.0f" $(( (50.0 - 0.0) / (12.0 - 0.0) * ($PM2_5 - 0.0) + 0.0 )) )
-  RATING="#85df56"
+  RATING="#85df56" # green
 elif (( $PM2_5 < 35.5 )); then
   AQI=$( printf "%.0f" $(( (100.0 - 51.0) / (35.4 - 12.1) * ($PM2_5 - 12.1) + 51 )) )
-  RATING="#fbcf4b"
+  RATING="#fbcf4b" # yellow
 elif (( $PM2_5 < 55.5 )); then
   AQI=$( printf "%.0f" $(( (150.0 - 101.0) / (55.4 - 35.5) * ($PM2_5 - 35.5) + 101 )) )
-  RATING="#f28c33"
+  RATING="#f28c33" # orange
 elif (( $PM2_5 < 150.5 )); then
   AQI=$( printf "%.0f" $(( (200.0 - 151.0) / (150.4 - 55.5) * ($PM2_5 - 55.5) + 151 )) )
-  RATING="#dd4d3c"
+  RATING="#dd4d3c" # red
 elif (( $PM2_5 < 250.5 )); then
   AQI=$( printf "%.0f" $(( (300.0 - 201.0) / (250.4 - 150.5) * ($PM2_5 - 150.5) + 201 )) )
-  RATING="#cf79e0"
+  RATING="#cf79e0" # purple
 else
   AQI=$( printf "%.0f" $(( (500.0 - 301.0) / (500.4 - 250.5) * ($PM2_5 - 250.5) + 301 )) )
-  RATING="#571515"
+  RATING="#571515" # maroon
 fi
 
 echo "${ICON} ${AQI}"

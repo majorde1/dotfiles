@@ -13,26 +13,7 @@ set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
-#font pango:DejaVu Nerd Font 11
 font pango:DejaVu Sans 11
-
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
-# The combination of xss-lock, nm-applet and pactl is a popular choice, so
-# they are included here as an example. Modify as you see fit.
-
-# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
-# screen before suspend. Use loginctl lock-session to lock your screen.
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
-
-# Use pactl to adjust volume in PulseAudio.
-set $refresh_i3status killall -SIGUSR1 i3status
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && $refresh_i3status
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && $refresh_i3status
 
 # Use Mouse+$mod to drag floating windows to their wanted position
 floating_modifier $mod
@@ -49,14 +30,8 @@ bindsym $mod+F5 exec lutris
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
-#bindsym $mod+d exec --no-startup-id dmenu_run
-# A more modern dmenu replacement is rofi:
+# Rofi is a more modern dmenu replacement
 bindsym $mod+d exec --no-startup-id rofi -show run -theme "~/.config/i3/rofi.theme" -fullscreen
-# bindcode $mod+40 exec "rofi -modi drun,run -show drun"
-# There also is i3-dmenu-desktop which only displays applications shipping a
-# .desktop file. It is a wrapper around dmenu, so you need that installed.
-# bindcode $mod+40 exec --no-startup-id i3-dmenu-desktop
 
 # change focus
 bindsym $mod+h focus left
@@ -108,18 +83,49 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
+# reload the configuration file
+bindsym $mod+Shift+c reload
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+r restart
+
+# Screen lock settings
+bindsym $mod+CTRL+Shift+l exec i3lock --color "$background"
+
+# Have to click to set focus with mouse
+focus_follows_mouse no
+
+# Set resolution settings
+exec "${HOME}/.screenlayout/screen_layout.sh"
+
+# Wallpaper image
+exec_always --no-startup-id feh --no-fehbg --bg-max \
+~/.config/i3/feh/Dark_Ivy.jpg
+
+# floating pop up
+for_window [window_role="pop-up"] floating enable
+for_window [window_role="task_dialog"] floating enable
+
+for_window [class="Arandr"] floating enable
+for_window [class="Lutris"] floating enable
+for_window [class="Wine"] floating enable
+for_window [class="VirtualBox Machine"] floating enable
+
+##############
+# WORKSPACES #
+##############
+
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
-set $ws1 "1: "
-set $ws2 "2: "
-set $ws3 "3: "
-set $ws4 "4: "
+set $ws1 "1 "
+set $ws2 "2 "
+set $ws3 "3 "
+set $ws4 "4 "
 set $ws5 "5"
 set $ws6 "6"
 set $ws7 "7"
 set $ws8 "8"
 set $ws9 "9"
-set $ws10 "10"
+set $ws10 "10 "
 
 # switch to workspace
 bindsym $mod+1 workspace number $ws1
@@ -145,16 +151,37 @@ bindsym $mod+Shift+8 move container to workspace number $ws8
 bindsym $mod+Shift+9 move container to workspace number $ws9
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
-# assign [class="Rhythmbox"] $ws10 # Put Rhythmbox on workspace 10
+# Workspace assignments
+assign [class="Rhythmbox"] $ws10 # Put Rhythmbox on workspace 10
 
 workspace_auto_back_and_forth yes
 
-# reload the configuration file
-bindsym $mod+Shift+c reload
-# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
-bindsym $mod+Shift+r restart
+##########
+# I3 BAR #
+##########
 
-# resize window (you can also use the mouse for that)
+bar {
+  status_command i3blocks -c ~/.config/i3/i3blocks.conf
+  tray_padding 0
+  font pango:Font Awesome 5 Free 12
+  colors {
+    background $black1
+    statusline $white2
+    separator $white2
+
+    #                  border      background  text
+    focused_workspace  $black1     $black1     $white2
+    active_workspace   $black1     $black1     $black2
+    inactive_workspace $black1     $black1     $black2
+    urgent_workspace   $red1       $black1     $red1
+    binding_mode       $yellow2    $yellow2    $black1 }
+}
+
+#########
+# MODES #
+#########
+
+### RESIZE MODE ###
 mode "resize" {
   # These bindings trigger as soon as you enter the resize mode
 
@@ -178,52 +205,9 @@ mode "resize" {
   bindsym Escape mode "default"
   bindsym $mod+r mode "default"
 }
-
 bindsym $mod+r mode "resize"
 
-# floating pop up
-for_window [window_role="pop-up"] floating enable
-for_window [window_role="task_dialog"] floating enable
-
-for_window [class="Arandr"] floating enable
-for_window [class="Lutris"] floating enable
-for_window [class="Wine"] floating enable
-for_window [class="VirtualBox Machine"] floating enable
-
-# Start i3bar to display a workspace bar (plus the system information i3status
-# finds out, if available)
-bar {
-  #status_command i3status --config ~/.config/i3/i3status.conf
-  status_command i3blocks -c ~/.config/i3/i3blocks.conf
-  # Disable all tray icons
-  #tray_output none
-  tray_padding 0
-  colors {
-    background $black1
-    statusline $white2
-    separator $white2
-
-    #                  border      background  text
-    focused_workspace  $black1     $black1     $white2
-    active_workspace   $black1     $black1     $black2
-    inactive_workspace $black1     $black1     $black2
-    urgent_workspace   $red1       $black1     $red1
-    binding_mode       $cyan1      $cyan1      $black1
-  }
-  font pango:Font Awesome 5 Free 12
-}
-
-# Set resolution settings
-exec "${HOME}/.screenlayout/screen_layout.sh"
-
-focus_follows_mouse no
-
-# Screen lock settings
-#set $i3lockwall sh ~/.config/i3/scripts/lock.sh
-#bindsym $mod+CTRL+Shift+l exec --no-startup-id $i3lockwall
-bindsym $mod+CTRL+Shift+l exec i3lock --color "$background"
-
-# shutdown / restart / suspend...
+### SYSTEM MODE ###
 set $mode_system \
 System (l) lock, (e) logout, (s) suspend, \
 (h) hibernate, (r) reboot, (Ctrl+s) shutdown
@@ -243,12 +227,24 @@ mode "$mode_system" {
   bindsym Return mode "default"
   bindsym Escape mode "default"
 }
-
 bindsym $mod+BackSpace mode "$mode_system"
 
-exec --no-startup-id feh --no-fehbg --bg-max \
-~/.config/i3/feh/Dark_Ivy.jpg
-# exec_always feh --bg-scale /path/to/file (alternate)
+### MEDIA MODE ###
+set $mode_media \
+Media (m) mute, (j) -volume, (k) +volume, (h) prev, (l) next, \
+(p) Play/Pause
+
+mode "$mode_media" {
+  bindsym m exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+  bindsym j exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
+  bindsym k exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
+  bindsym h exec --no-startup-id playerctl previous
+  bindsym l exec --no-startup-id playerctl next
+  bindsym p exec --no-startup-id playerctl play-pause
+
+  bindsym Escape mode "default"
+}
+bindsym $mod+m mode "$mode_media"
 
 ##########
 # DESIGN #
@@ -309,8 +305,11 @@ for_window [class=URxvt*"] border pixel 1
 # Startup Applications #
 ########################
 
-# NetworkManager is the most popular way to manage wireless networks on Linux,
-# and nm-applet is a desktop environment-independent system tray GUI for it.
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+# NetworkManager system tray interface
 exec --no-startup-id nm-applet
 
 # Start PulseAudio sound server
@@ -336,14 +335,5 @@ for_window [instance="urxvt_scratchpad"] move to scratchpad, border none
 bindsym $mod+Shift+t [instance="urxvt_scratchpad"] scratchpad show
 
 # htop scratchpad
-#exec urxvtc_auto.sh -name htop_scratchpad -e htop
 for_window [instance="htop_scratchpad"] move to scratchpad, border none
 bindsym $mod+Shift+p [instance="htop_scratchpad"] scratchpad show
-
-################
-# CONFIG IDEAS #
-################
-# Create a media control mode:
-# exec playerctl play/pause/next/previous (need to install playerctl)
-# exec --no-startup-id pactl set-sink-volume 0 +5%/-5% (change volume)
-# exec --no-startup-id pactl set-sink-mute 0 toggle (mute/unmute)
