@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Simple wrapper around i3blocks/temperature to change the colors.
+
+/usr/share/i3blocks/temperature | sed -e 's/#FFFC00/#fbcf4b/' -e 's/#FF0000/#dd4d3c/'

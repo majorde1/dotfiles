@@ -50,7 +50,7 @@ elif (( $PM2_5 < 250.5 )); then
   RATING="#cf79e0" # purple
 else
   AQI=$( printf "%.0f" $(( (500.0 - 301.0) / (500.4 - 250.5) * ($PM2_5 - 250.5) + 301 )) )
-  RATING="#571515" # maroon
+  RATING="#9b2f6a" # maroon
 fi
 
 echo "${ICON} ${AQI}"

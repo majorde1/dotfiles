@@ -27,6 +27,12 @@ bindsym $mod+F1 exec google-chrome
 # start Lutris
 bindsym $mod+F5 exec lutris
 
+# start KQED stream in workspace 10
+bindsym $mod+F9 exec goodvibes --name kqed-stream --without-ui KQED
+bindsym $mod+Shift+F9 exec pkill goodvibes
+assign [instance="kqed-stream"] $ws10
+for_window [instance="kqed-stream"] focus_on_window_activation none
+
 # kill focused window
 bindsym $mod+Shift+q kill
 

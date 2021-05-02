@@ -1,9 +1,17 @@
 #!/bin/zsh
 
+if (( ${BLOCK_BUTTON} == 1 )); then
+  pulsemixer --change-volume -5
+elif (( ${BLOCK_BUTTON} == 2 )); then
+  pulsemixer --toggle-mute
+elif (( ${BLOCK_BUTTON} == 3 )); then
+  pulsemixer --change-volume +5
+fi
+
 if (( $(pulsemixer --get-mute) == 1 )); then
   echo " MUTE"
   echo
-  echo '#d8aa1e'
+  echo '#fbcf4b'
   exit 0
 fi
   
