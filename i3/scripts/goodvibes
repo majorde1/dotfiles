@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [[ $(goodvibes-client is-running) != "true" ]]; then
+  exit 0
+fi
+
+if (( ${BLOCK_BUTTON} == 1 )); then
+  goodvibes-client prev
+elif (( ${BLOCK_BUTTON} == 2 )); then
+  goodvibes-client play-stop
+elif (( ${BLOCK_BUTTON} == 3 )); then
+  goodvibes-client next
+fi
+
+ICON=""
+if [[ $(goodvibes-client playing) != "true" ]]; then
+  ICON=""
+fi
+
+STATION="$(goodvibes-client current | sed -e 's/\x1b\[[0-9;]*m//g' -e 's/\t.*//')"
+echo "${ICON} ${STATION}"

@@ -1,0 +1,14 @@
+# Read `man 5 sway` for a complete reference.
+
+# Modular Configs
+include ~/.config/sway/config.d/vars.conf
+include ~/.config/sway/config.d/io.conf
+include ~/.config/sway/config.d/bindings.conf
+include ~/.config/sway/config.d/workspaces.conf
+include ~/.config/sway/config.d/design.conf
+include ~/.config/sway/config.d/startup.conf
+include ~/.config/sway/config.d/statusbar.conf
+include ~/.config/sway/config.d/modes.conf
+
+# System-level configuration
+include /etc/sway/config.d/*

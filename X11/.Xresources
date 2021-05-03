@@ -35,10 +35,10 @@
 *.color7:       #909295
 *.color15:      #eaeaea
 
-URxvt.font: xft:DejaVuSansMono Nerd Font Mono:size=12:antialias=true:style=Book,xft:Symbola:size=12:antialias=true
-URxvt.boldFont: xft:DejaVuSansMono Nerd Font Mono:size=12:antialias=true:style=Bold,xft:Symbola:size=12:antialias=true
-URxvt.italicFont: xft:DejaVuSansMono Nerd Font Mono:size=12:antialias=true:style=Oblique,xft:Symbola:size=12:antialias=true
-URxvt.boldItalicFont: xft:DejaVuSansMono Nerd Font Mono:size=12:antialias=true:style=Bold Oblique,xft:Symbola:size=12:antialias=true
+URxvt.font: xft:dejavusansmono nerd font mono:size=12:antialias=true:style=book,xft:symbola:size=12:antialias=true
+URxvt.boldFont: xft:dejavusansmono nerd font mono:size=12:antialias=true:style=bold,xft:symbola:size=12:antialias=true
+URxvt.italicFont: xft:dejavusansmono nerd font mono:size=12:antialias=true:style=oblique,xft:symbola:size=12:antialias=true
+URxvt.boldItalicFont: xft:dejavusansmono nerd font mono:size=12:antialias=true:style=bold oblique,xft:symbola:size=12:antialias=true
 !URxvt.letterSpace: -1
 URxvt.letterSpace: 0
 URxvt.lineSpace: 0
