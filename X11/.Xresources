@@ -1,39 +1,39 @@
 ! special
-*.foreground:   #eaeaea
+*.foreground:   #f1f3f4
 *.background:   #161616
-*.cursorColor:  #eaeaea
+*.cursorColor:  #f1f3f4
 
 ! black
-*.color0:       #1c1d1f
-*.color8:       #4e5053
+*.color0:       #202124
+*.color8:       #5f6368
 
 ! red
-*.color1:       #ad2818
-*.color9:       #dd4d3c
+*.color1:       #d93025
+*.color9:       #ea4335
 
 ! green
 *.color2:       #65a643
-*.color10:      #85df56
+*.color10:      #76d145
 
 ! yellow
-*.color3:       #d8aa1e
-*.color11:      #fbcf4b
+*.color3:       #fbbc04
+*.color11:      #fcc934
 
 ! blue
 *.color4:       #3b6dc0
-*.color12:      #5b9aff
+*.color12:      #74aaff
 
 ! magenta
-*.color5:       #a94bbc
+*.color5:       #af4ac4
 *.color13:      #cf79e0
 
 ! cyan
-*.color6:       #1f9b9b
+*.color6:       #0cbbbb
 *.color14:      #6bdada
 
 ! white
-*.color7:       #909295
-*.color15:      #eaeaea
+*.color7:       #bdc1c6
+*.color15:      #f1f3f4
 
 URxvt.font: xft:dejavusansmono nerd font mono:size=12:antialias=true:style=book,xft:symbola:size=12:antialias=true
 URxvt.boldFont: xft:dejavusansmono nerd font mono:size=12:antialias=true:style=bold,xft:symbola:size=12:antialias=true
