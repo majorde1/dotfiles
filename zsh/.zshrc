@@ -33,6 +33,13 @@ bindkey -v
 export KEYTIMEOUT=1
 autoload -Uz cursor_mode && cursor_mode
 
+# Home/End/Delete keybindings
+bindkey "^[[7~" beginning-of-line
+bindkey "^[[H" beginning-of-line
+bindkey "^[[8~" end-of-line
+bindkey "^[[F" end-of-line
+bindkey "^[[3~" delete-char
+
 # Vim mapping for completion navigation
 zmodload zsh/complist
 bindkey -M menuselect 'h' vi-backward-char

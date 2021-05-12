@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Simple wrapper around i3blocks/load_average to change color.
+~/.config/local/share/i3blocks-contrib/load_average/load_average | sed -e 's/#FF0000/#dd4d3c/'

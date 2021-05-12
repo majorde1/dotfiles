@@ -167,7 +167,7 @@ workspace_auto_back_and_forth yes
 ##########
 
 bar {
-  status_command i3blocks -c ~/.config/i3/i3blocks.conf
+  status_command i3blocks -c ~/.config/i3blocks/i3blocks.conf
   tray_padding 0
   font pango:Font Awesome 5 Free 12
   colors {

@@ -17,21 +17,16 @@
 
 prompt_status() {
   ZSH_PROMPT_PREFIX=" %F{yellow}λ %f%F{blue}"
-  #ZSH_PROMPT_UNSTAGED="%F{red}⬍%f"
-  #ZSH_PROMPT_ADDED="%F{green}🞧%f"
-  #ZSH_PROMPT_MODIFIED="%F{cyan}✱%f"
-  #ZSH_PROMPT_DELETED="%F{red}🞬%f"
-  #ZSH_PROMPT_RENAMED="%F{yellow}🢂%f"
-  #ZSH_PROMPT_UNTRACKED="%B%F{magenta}?%f%b"
-  ZSH_PROMPT_UNSTAGED="%F{red}%f"
-  ZSH_PROMPT_ADDED="%F{green}✚%f"
-  ZSH_PROMPT_MODIFIED="%F{cyan}✱%f"
-  ZSH_PROMPT_DELETED="%B%F{red}🞬%f%b"
-  ZSH_PROMPT_RENAMED="%B%F{yellow}🡆%f%b"
-  ZSH_PROMPT_UNTRACKED="%B%F{magenta}?%f%b"
+  ZSH_PROMPT_UNSTAGED="%F{red}%f"
+  ZSH_PROMPT_ADDED="%F{green}%f"
+  ZSH_PROMPT_MODIFIED="%F{cyan}%f"
+  ZSH_PROMPT_DELETED="%F{red}%f"
+  ZSH_PROMPT_RENAMED="%F{yellow}%f"
+  ZSH_PROMPT_UNTRACKED="%F{magenta}%f"
 
   cd -q $1
-  if [[ -d "./.git" ]]; then
+  git branch 2>&1 > /dev/null
+  if [[ $? ]]; then
     git_prompt_status $1
   fi
 }
@@ -75,6 +70,11 @@ git_prompt_status() {
 }
 
 prompt_status_done() {
+  local name="$1" code="$2"
+  if (( $code == 2 )) || (( $code == 3 )) || (( $code == 130 )); then
+    async_stop_worker zsh_prompt_worker
+    prompt_init_worker
+  fi
   ZSH_PROMPT="$3"
   zle reset-prompt
 }
@@ -88,12 +88,16 @@ modified_path() {
   echo $PWD | sed -e "s:^${HOME}:~:"
 }
 
+prompt_init_worker() {
+  async_start_worker zsh_prompt_worker
+  async_register_callback zsh_prompt_worker prompt_status_done
+}
+
 prompt_setup() {
   # Display hg branch
 
   async_init
-  async_start_worker zsh_prompt_worker
-  async_register_callback zsh_prompt_worker prompt_status_done
+  prompt_init_worker
 
   autoload -Uz add-zsh-hook
   add-zsh-hook precmd prompt_precmd

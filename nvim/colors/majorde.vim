@@ -48,7 +48,7 @@ hi Cursor guifg=bg guibg=fg
 hi lCursor guifg=bg guibg=fg
 hi EndOfBuffer ctermfg=8
 hi ColorColumn ctermbg=7
-hi MatchParen ctermbg=15 ctermfg=0
+hi MatchParen cterm=standout ctermbg=13 ctermfg=0
 
 " Colors for syntax highlighting
 hi Comment term=bold ctermfg=4 guifg=#406090

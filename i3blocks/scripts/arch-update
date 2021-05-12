@@ -1,0 +1,12 @@
+#!/bin/bash
+
+RAW_VALUE="$(~/.config/local/share/i3blocks-contrib/arch-update/arch-update)"
+NUM_UPDATES="$(echo \"$RAW_VALUE\" | sed -e 's/.*>\([0-9]*\).*<.*/\1/')"
+
+if [ -z "$NUM_UPDATES" ]; then
+  exit 0
+fi
+
+echo $NUM_UPDATES
+echo $NUM_UPDATES
+echo "#fcc934"
