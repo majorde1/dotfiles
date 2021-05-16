@@ -28,4 +28,8 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export JAVA_HOME="$(dirname $(dirname $(realpath $(which javac))))"
 
 # Path
-export PATH="${HOME}/go/bin:${HOME}/.local/bin:${PATH}"
+export PATH="${HOME}/.local/bin:${HOME}/go/bin:${HOME}/.local/bin:${PATH}"
+
+# Node.js
+export NODE_PATH="${HOME}/.local/lib/node_modules:/usr/local/lib/node_modules"
+export npm_config_prefix="${HOME}/.local"

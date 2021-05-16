@@ -1,37 +1,87 @@
-#!/bin/zsh
+#!/bin/perl
 
-WEATHER="$(weather -q -m --no-cache-data SJC 2>/dev/null)"
-TEMP="$(echo $WEATHER | awk '/Temperature:/ {print $2 "°C"}')"
-SKY="$(echo $WEATHER | grep 'Sky conditions:' | sed -e 's/.*Sky conditions: //')"
-HOUR="$(date '+%H')"
+if (! $ENV{'API_KEY'}) {
+  print STDERR "Missing required environment variable 'API_KEY'.\n";
+  exit 1;
+}
+if (! $ENV{'LOCATION'}) {
+  print STDERR "Missing required environment variable 'LOCATION'.\n";
+  exit 1;
+}
+$api_key = $ENV{'API_KEY'};
+$location = $ENV{'LOCATION'};
+$units = $ENV{'UNITS'} || 'metric';
 
-# See https://www.weather.gov/media/pah/ServiceGuide/A-forecast.pdf
-# clear
-# mostly clear
-# partly cloudy
-# mostly cloudy
-# considerable cloudiness
-# overcast
+$json = `curl "http://api.openweathermap.org/data/2.5/weather?q=$location&units=$units&appid=$api_key"`;
 
-CLEAR=" "
-PARTLY_CLEAR=" "
-if (( $HOUR < 7 || $HOUR > 19 )); then
-  CLEAR=" "
-  PARTLY_CLEAR=" "
-fi
+%icons = (
+  '01d' => '',
+  '01n' => '',
+  '02d' => '',
+  '02n' => '',
+  '03d' => '',
+  '03n' => '',
+  '04d' => '',
+  '04n' => '',
+  '09d' => '',
+  '10d' => '',
+  '10n' => '',
+  '11d' => '',
+  '13d' => '',
+  '50d' => ''
+);
 
-if [[ "$SKY" == "clear" ]]; then
-  echo "$CLEAR$TEMP"
-elif [[ "$SKY" == "mostly clear" ]]; then
-  echo "$CLEAR$TEMP"
-elif [[ "$SKY" == "partly cloudy" ]]; then
-  echo "$PARTLY_CLEAR$TEMP"
-elif [[ "$SKY" == "mostly cloudy" ]]; then
-  echo "$PARTLY_CLEAR$TEMP"
-elif [[ "$SKY" == "considerable cloudiness" ]]; then
-  echo " $TEMP"
-elif [[ "$SKY" == "overcast" ]]; then
-  echo " $TEMP"
-else
-  echo " $TEMP"
-fi
+@arrows = ('🡫', '🡯', '🡨', '🡬', '🡩', '🡭', '🡪', '🡮', '🡫');
+
+$temp_unit = $units eq "imperial" ? "°F" : "°C";
+$wind_unit = $units eq "imperial" ? "mph" : "m/s";
+
+%data = ();
+$data{'code'} = `echo '$json' | jq -j ".weather[0].id"`;
+$data{'icon'} = `echo '$json' | jq -j ".weather[0].icon"`;
+$data{'description'} = join(" ", map {ucfirst} split(" ", `echo '$json' | jq -j ".weather[0].description"`));
+$data{'temp'} = sprintf("%.1f", `echo '$json' | jq -j ".main.temp"`);
+$data{'pressure'} = `echo '$json' | jq -j ".main.pressure"`;
+$data{'humidity'} = `echo '$json' | jq -j ".main.humidity"`;
+$data{'wind_speed'} = `echo '$json' | jq -j ".wind.speed"`;
+$data{'wind_deg'} = `echo '$json' | jq -j ".wind.deg"`;
+$data{'collection_time'} = `echo '$json' | jq -j ".dt"`;
+$data{'sunrise'} = `echo '$json' | jq -j ".sys.sunrise"`;
+$data{'sunset'} = `echo '$json' | jq -j ".sys.sunset"`;
+
+$wind_index = sprintf("%.0f", $data{'wind_deg'} / 45);
+
+sub rtrim {
+  $s = shift;
+  $s =~ s/\s$//;
+  return $s;
+}
+
+%values = (
+  'description' => $data{'description'},
+  'temperature' => "$data{'temp'}$temp_unit",
+  'wind' => "$arrows[$wind_index] $data{'wind_speed'} $wind_unit",
+  'humidity' => "$data{'humidity'}%",
+  'pressure' => "$data{'pressure'} hPa",
+  'sunrise' => rtrim(`date +%T --date="\@$data{'sunrise'}"`),
+  'sunset' => rtrim(`date +%T --date="\@$data{'sunset'}"`)
+);
+
+@outputs = ();
+if ($ENV{'TEMPERATURE'}) {
+  push(@outputs, "$icons{$data{'icon'}} $values{'temperature'}");
+}
+if ($ENV{'WIND'}) {
+  push(@outputs, " $values{'wind'}");
+}
+if ($ENV{'HUMIDITY'}) {
+  push(@outputs, " $values{'humidity'}");
+}
+if ($ENV{'PRESSURE'}) {
+  push(@outputs, " $values{'pressure'}");
+}
+print join(' ', @outputs) . "\n";
+
+if ($ENV{'BLOCK_BUTTON'} == 1) {
+  `notify-send "$values{'description'}\n$values{'temperature'}\n$values{'wind'}\n$values{'humidity'} humidity\n$values{'pressure'}\nSunrise: $values{'sunrise'}\nSunset: $values{'sunset'}"`
+}
