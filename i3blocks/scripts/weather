@@ -58,6 +58,7 @@ sub rtrim {
 }
 
 %values = (
+  'collection_time' => rtrim(`date +%T --date="\@$data{'collection_time'}"`),
   'description' => $data{'description'},
   'temperature' => "$data{'temp'}$temp_unit",
   'wind' => "$arrows[$wind_index] $data{'wind_speed'} $wind_unit",
@@ -83,5 +84,5 @@ if ($ENV{'PRESSURE'}) {
 print join(' ', @outputs) . "\n";
 
 if ($ENV{'BLOCK_BUTTON'} == 1) {
-  `notify-send "$values{'description'}\n$values{'temperature'}\n$values{'wind'}\n$values{'humidity'} humidity\n$values{'pressure'}\nSunrise: $values{'sunrise'}\nSunset: $values{'sunset'}"`
+  `notify-send "Last Update: $values{'collection_time'}\n$values{'description'}\n$values{'temperature'}\n$values{'wind'}\n$values{'humidity'} humidity\n$values{'pressure'}\nSunrise: $values{'sunrise'}\nSunset: $values{'sunset'}"`
 }
