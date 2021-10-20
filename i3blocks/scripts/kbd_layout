@@ -3,8 +3,10 @@
 US=0
 US_INTL=1
 
-ACTIVE_LAYOUT=$(swaymsg -t get_inputs \
-    | jq -r 'map(select(.identifier == "1133:49948:Logitech_USB_Keyboard"))[0].xkb_active_layout_index')
+#ACTIVE_LAYOUT=$(swaymsg -t get_inputs \
+#    | jq -r 'map(select(.identifier == "1133:49948:Logitech_USB_Keyboard"))[0].xkb_active_layout_index')
+
+ACTIVE_LAYOUT=$(xset -q | grep LED | awk '{print $10}' | cut -b 5)
 
 if (( $ACTIVE_LAYOUT == $US )); then
   echo ""

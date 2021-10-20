@@ -1,0 +1,75 @@
+* {
+  background-color: #ffffff00;
+  border-color: #000000ff;
+  cursor: default; // |pointer|text
+  text-color: #7beab7ff;
+  highlight: bold #7beab7ff;
+}
+
+window {
+  background-color: #1c1d1fee;
+  padding: 32% 40%;
+
+  font: "DejaVu Sans 20";
+  transparency: "real";
+  location: center;
+  fullscreen: true;
+}
+
+mainbox {
+  children: [ inputbar, separator, listview ];
+}
+
+inputbar {
+  padding: 0px 10px;
+  children: [ prompt, textbox-colon, entry ];
+}
+
+textbox-colon {
+  content: ": ";
+  expand: false;
+}
+
+entry {
+  placeholder: "executable";
+  placeholder-color: #7beab766;
+  blink: false;
+}
+
+separator {
+  enabled: true;
+  border: 1px;
+  margin: 5px 0px;
+  border-color: #eaeaea99;
+  expand: false;
+}
+
+listview {
+  columns: 1;
+  fixed-height: true;
+  lines: 10;
+  dynamic: false;
+  scrollbar: false;
+  cycle: false;
+}
+
+element {
+  margin: 5px 10px;
+  children: [ element-icon, element-text ];
+}
+
+element.selected {
+  background-color: #7beab7ff;
+}
+
+element-icon {
+  expand: false;
+  size: 32;
+  vertical-align: 0.5;
+  padding: 0px 10px 0px 0px;
+}
+
+element-text.selected {
+  text-color: #1c1d1fff;
+  highlight: bold #1c1d1fff;
+}

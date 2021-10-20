@@ -1,0 +1,386 @@
+#############
+# VARIABLES #
+#############
+
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+
+# Terminal Emulator
+set $term alacritty
+
+# Application Launcher
+set $menu rofi -show run -theme "~/.config/rofi/rofi.theme" -fullscreen
+
+########################
+# OUTPUT CONFIGURATION #
+########################
+
+# Wallpaper
+exec_always --no-startup-id feh --no-fehbg --bg-max ~/.config/wallpaper/Dark_Ivy.jpg
+
+# Font
+font pango:DejaVu Sans 12
+
+# Inhibit idle in full-screen Chrome
+for_window [class="Google-chrome"] inhibit_idle fullscreen
+
+# Lock Screen Manually
+bindsym $mod+Ctrl+Shift+l exec i3lock --color "$background"
+
+# Have to click to set focus with mouse
+focus_follows_mouse no
+
+# Floating Windows
+for_window [instance="lutris"] floating enable
+for_window [class="Wine"] floating enable
+for_window [class="explorer.exe"] floating enable
+for_window [class="VirtualBox Machine"] floating enable
+
+#######################
+# INPUT CONFIGURATION #
+#######################
+
+# Two Keyboard Layouts: US, US(intl); Scroll-lock to toggle
+exec "setxkbmap -layout 'us,us' -variant ',intl' -option 'grp:sclk_toggle' -option 'grp_led:scroll'"
+
+################
+# KEY BINDINGS #
+################
+
+### Basics ###
+
+# Start a terminal
+bindsym $mod+Return exec $term
+
+# Kill focused window
+bindsym $mod+Shift+q kill
+
+# Start your launcher
+bindsym $mod+d exec $menu
+
+# Drag floating windows by holding down $mod and left mouse button.
+# Resize them with right mouse button + $mod.
+# Despite the name, also works for non-floating windows.
+floating_modifier $mod
+
+# Reload the configuration file
+bindsym $mod+Shift+c reload
+
+### Movement ###
+
+# Move your focus around
+bindsym $mod+$left focus left
+bindsym $mod+$down focus down
+bindsym $mod+$up focus up
+bindsym $mod+$right focus right
+# Or use $mod+[up|down|left|right]
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# Move the focused window with the same, but add Shift
+bindsym $mod+Shift+$left move left
+bindsym $mod+Shift+$down move down
+bindsym $mod+Shift+$up move up
+bindsym $mod+Shift+$right move right
+# Ditto, with arrow keys
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+### Layout ###
+
+# $mod+b or $mod+v, for horizontal and vertical splits, respectively.
+bindsym $mod+b splith
+bindsym $mod+v splitv
+
+# Switch the current container between different layout styles
+bindsym $mod+s layout stacking
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout toggle split
+
+# Make the current focus fullscreen
+bindsym $mod+f fullscreen
+
+# Toggle the current focus between tiling and floating mode
+bindsym $mod+Shift+space floating toggle
+
+# Swap focus between the tiling area and the floating area
+bindsym $mod+space focus mode_toggle
+
+# Move focus to the parent container
+bindsym $mod+a focus parent
+
+### Scratchpad ###
+
+# Sway has a "scratchpad", which is a bag of holding for windows.
+# You can send windows there and get them back later.
+
+# Move the currently focused window to the scratchpad
+bindsym $mod+Shift+minus move scratchpad
+
+# Show the next scratchpad window or hide the focused scratchpad window.
+# If there are multiple scratchpad windows, this command cycles through them.
+bindsym $mod+minus scratchpad show
+
+### Applications ###
+
+# Chrome
+bindsym $mod+F1 exec google-chrome
+
+# Lutris
+bindsym $mod+F5 exec lutris
+
+# Stream KQED in workspace 10
+bindsym $mod+F9 exec goodvibes --name kqed-stream --without-ui KQED
+bindsym $mod+Shift+F9 exec pkill goodvibes
+assign [instance="kqed-stream"] $ws10
+
+## Terminal scratchpad
+#for_window [instance="urxvt_scratchpad"] move to scratchpad, border none
+#bindsym $mod+Shift+t [instance="urxvt_scratchpad"] scratchpad show
+#
+## htop scratchpad
+#for_window [instance="htop_scratchpad"] move to scratchpad, border none
+#bindsym $mod+Shift+p [instance="htop_scratchpad"] scratchpad show
+
+# Terminal scratchpad
+for_window [instance="alacritty_scratchpad"] move to scratchpad, border none
+bindsym $mod+Shift+t [instance="alacritty_scratchpad"] scratchpad show
+
+# htop scratchpad
+for_window [instance="htop_scratchpad"] move to scratchpad, border none
+bindsym $mod+Shift+p [instance="htop_scratchpad"] scratchpad show
+
+##############
+# WORKSPACES #
+##############
+
+# Define names for default workspaces for which we configure key bindings later on.
+# We use variables to avoid repeating the names in multiple places.
+set $ws1 "1 "
+set $ws2 "2 "
+set $ws3 "3 "
+set $ws4 "4 "
+set $ws5 "5"
+set $ws6 "6"
+set $ws7 "7"
+set $ws8 "8"
+set $ws9 "9"
+set $ws10 "10 "
+
+# switch to workspace
+bindsym $mod+1 workspace number $ws1
+bindsym $mod+2 workspace number $ws2
+bindsym $mod+3 workspace number $ws3
+bindsym $mod+4 workspace number $ws4
+bindsym $mod+5 workspace number $ws5
+bindsym $mod+6 workspace number $ws6
+bindsym $mod+7 workspace number $ws7
+bindsym $mod+8 workspace number $ws8
+bindsym $mod+9 workspace number $ws9
+bindsym $mod+0 workspace number $ws10
+
+# move focused container to workspace
+bindsym $mod+Shift+1 move container to workspace number $ws1
+bindsym $mod+Shift+2 move container to workspace number $ws2
+bindsym $mod+Shift+3 move container to workspace number $ws3
+bindsym $mod+Shift+4 move container to workspace number $ws4
+bindsym $mod+Shift+5 move container to workspace number $ws5
+bindsym $mod+Shift+6 move container to workspace number $ws6
+bindsym $mod+Shift+7 move container to workspace number $ws7
+bindsym $mod+Shift+8 move container to workspace number $ws8
+bindsym $mod+Shift+9 move container to workspace number $ws9
+bindsym $mod+Shift+0 move container to workspace number $ws10
+
+# Workspace assignments
+assign [class="Rhythmbox"] $ws10 # Put Rhythmbox on workspace 10
+
+# Switch to current workspace goes to previous instead.
+workspace_auto_back_and_forth yes
+
+##########
+# DESIGN #
+##########
+
+# Colors
+# special
+set $foreground #eaeaea
+set $background #161616
+set $cursorColor #eaeaea
+
+# black
+set $black1 #1c1d1f
+set $black2 #4e5053
+set $trueblack #000000
+
+# red
+set $red1 #ad2818
+set $red2 #dd4d3c
+
+# green
+set $green1 #65a643
+set $green2 #85df56
+
+# yellow
+set $yellow1 #d8aa1e
+set $yellow2 #fbcf4b
+
+# blue
+set $blue1 #3b6dc0
+set $blue2 #5b9aff
+
+# magenta
+set $magenta1 #a94bbc
+set $magenta2 #cf79e0
+
+# cyan
+set $cyan1 #1f9b9b
+set $cyan2 #6bdada
+
+# white
+set $white1 #909295
+set $white2 #eaeaea
+
+# class                 border  background  text        indicator child_border
+client.focused          #2f343f #4b5365     $white2     $white1
+client.focused_inactive #2f343f #21242c     #888888     $white1
+client.unfocused        #2f343f #21242c     #888888     $white1   #21242c
+client.urgent           $red1   $red1       $white2     $red1     $red1
+
+# Misc. UI Settings
+for_window [class=".*"] border normal 1
+for_window [class="URxvt"] border pixel 1
+for_window [class="URxvt"] opacity set 0.95
+for_window [instance="Alacritty"] border pixel 1
+
+########################
+# STARTUP APPLICATIONS #
+########################
+
+# Enable numlock
+exec --no-startup-id numlockx on
+
+# xss-lock grabs a logind suspend inhibit lock and will use i3lock to lock the
+# screen before suspend. Use loginctl lock-session to lock your screen.
+exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
+
+# NetworkManager system tray interface
+exec --no-startup-id nm-applet
+
+# USB disk automounting
+exec --no-startup-id udiskie
+
+# Notifications
+exec --no-startup-id dunst
+
+# Merge the Xresources, and start the urxvtd daemon plus scratchpads
+#exec xrdb -merge ~/.config/X11/.Xresources \
+#    && urxvtd -q -o -f \
+#    && urxvtc -name urxvt_scratchpad \
+#    && urxvtc -name htop_scratchpad -e htop
+exec --no-startup-id alacritty --class alacritty_scratchpad
+exec --no-startup-id alacritty --class htop_scratchpad -e htop
+
+# Compositor for transparency
+exec compton -f
+
+# Start gammastep for red-shifting colors at night
+#exec /usr/lib/geoclue-2.0/demos/agent
+#exec gammastep
+
+##############
+# STATUS BAR #
+##############
+
+bar {
+  position top
+
+  # When the status_command prints a new line to stdout, the bar updates.
+  # $mod+Shift+c reloads spawn additional instances, so kill it first.
+  status_command pkill i3blocks ; i3blocks -c ~/.config/i3blocks/i3blocks.conf
+  tray_padding 0
+  font "pango:Font Awesome 5 Free 14"
+
+  colors {
+    background $black1
+    statusline $white2
+    separator $white2
+
+    #                  border      background  text
+    focused_workspace  $black1     $black1     $white2
+    active_workspace   $black1     $black1     $black2
+    inactive_workspace $black1     $black1     $black2
+    urgent_workspace   $red1       $black1     $red1
+    binding_mode       $yellow1    $black1     $yellow1
+  }
+}
+
+#########
+# MODES #
+#########
+
+### RESIZE MODE ###
+mode "Resize" {
+  # left will shrink the containers width
+  # right will grow the containers width
+  # up will shrink the containers height
+  # down will grow the containers height
+  bindsym $left resize shrink width 10px
+  bindsym $down resize grow height 10px
+  bindsym $up resize shrink height 10px
+  bindsym $right resize grow width 10px
+
+  # Ditto, with arrow keys
+  bindsym Left resize shrink width 10px
+  bindsym Down resize grow height 10px
+  bindsym Up resize shrink height 10px
+  bindsym Right resize grow width 10px
+
+  # Return to default mode
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+bindsym $mod+r mode "Resize"
+
+### SYSTEM MODE ###
+set $mode_system \
+System (l)ock, (e)xit, (s)uspend, (h)ibernate, (r)eboot, (Ctrl+s)hutdown
+
+mode "$mode_system" {
+  bindsym l exec i3lock --color "$background", mode "default"
+  bindsym e exec i3-msg exit, mode "default"
+  bindsym s exec i3lock --color "$background" && systemctl suspend, mode "default"
+  bindsym h exec i3lock --color "$background" && systemctl hibernate, mode "default"
+  bindsym r exec systemctl reboot, mode "default"
+  bindsym Ctrl+s exec systemctl poweroff -i, mode "default"
+
+  # to close the menu: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+bindsym $mod+BackSpace mode "$mode_system"
+
+### MEDIA MODE ###
+set $mode_media Media
+
+# (m) mute, (j) -volume, (k) +volume, (h) prev, (l) next, (p) Play/Pause
+mode "$mode_media" {
+  bindsym m exec --no-startup-id pulsemixer --toggle-mute
+  bindsym j exec --no-startup-id pulsemixer --change-volume -5
+  bindsym k exec --no-startup-id pulsemixer --change-volume +5
+  bindsym h exec --no-startup-id playerctl previous
+  bindsym l exec --no-startup-id playerctl next
+  bindsym p exec --no-startup-id playerctl play-pause
+
+  bindsym Escape mode "default"
+}
+bindsym $mod+m mode "$mode_media"
